@@ -3,279 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FashionVision-AI - MVP</title>
+    <title>FashionVision-AI - Innovación en Retail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #0a192f;
             --secondary: #172a45;
             --accent: #f5b041;
+            --accent-rgb: 245, 176, 65;
             --text-light: #f8f9fa;
             --text-muted: #a8b2d1;
+            --card-bg: #1f365d;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--primary);
             color: var(--text-light);
             line-height: 1.6;
-            padding-bottom: 40px;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary) 30%, var(--secondary) 100%);
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            border-bottom: 3px solid var(--accent);
+            padding: 40px 20px;
+            border-bottom: 4px solid var(--accent);
         }
 
         .badge {
-            background-color: var(--accent);
-            color: var(--primary);
-            padding: 5px 12px;
-            font-weight: bold;
+            background-color: rgba(var(--accent-rgb), 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 6px 16px;
+            font-weight: 600;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
         }
 
-        h1 {
-            font-size: 2.2rem;
-            margin: 15px 0 5px 0;
-            color: var(--text-light);
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
         }
 
         .subtitle {
             color: var(--accent);
-            font-size: 1.1rem;
-            font-weight: 400;
-            margin-bottom: 15px;
-        }
-
-        .tagline {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 1.2rem;
             max-width: 600px;
-            margin: 0 auto;
+            margin-bottom: 20px;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         section {
             background-color: var(--secondary);
-            padding: 25px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            padding: 35px 25px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         h2 {
             color: var(--accent);
-            font-size: 1.4rem;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
             border-left: 4px solid var(--accent);
-            padding-left: 10px;
+            padding-left: 12px;
         }
 
         p {
-            color: var(--text-light);
-            margin-bottom: 15px;
-            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 1.05rem;
         }
 
-        ul {
-            list-style: none;
-        }
-
-        li {
-            margin-bottom: 10px;
+        /* --- COMPONENTES VISUALES --- */
+        .visual-display {
+            background: linear-gradient(135deg, #0f2347 0%, #051026 100%);
+            border: 1px solid rgba(245, 176, 65, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 25px 0;
             position: relative;
-            padding-left: 20px;
-            font-size: 0.95rem;
+            overflow: hidden;
         }
 
-        li::before {
-            content: "•";
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 1.2rem;
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
             position: absolute;
             left: 0;
-            top: -2px;
+            top: 0;
+            animation: scan 3s linear infinite;
+            box-shadow: 0 0 10px var(--accent);
+            opacity: 0.7;
         }
 
-        /* Estilos para el Flujo del Proceso */
-        .steps-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 15px;
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
         }
 
-        .step-card {
-            background-color: rgba(10, 25, 47, 0.6);
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 3px solid var(--text-muted);
-        }
-
-        .step-card.active-step {
-            border-left-color: var(--accent);
-        }
-
-        .step-num {
-            font-weight: bold;
+        .visual-display i {
+            font-size: 3.5rem;
             color: var(--accent);
-            font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
-        /* Métricas */
-        .metrics {
+        .ai-pipeline {
             display: flex;
             justify-content: space-around;
+            align-items: center;
+            padding: 20px 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .pipeline-box {
             text-align: center;
-            margin-top: 15px;
-            background: rgba(245, 176, 65, 0.1);
-            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .pipeline-box i {
+            font-size: 2rem;
+            color: var(--text-light);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Barras de rendimiento */
+        .chart-container {
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .bar-group {
+            margin-bottom: 15px;
+        }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .bar-bg {
+            background: #10213d;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            background: var(--accent);
+            height: 100%;
             border-radius: 6px;
         }
 
-        .metric-item-huge {
-            font-size: 2.5rem;
+        /* --- LISTAS --- */
+        ul { list-style: none; margin-bottom: 20px; }
+        li { margin-bottom: 12px; position: relative; padding-left: 25px; color: var(--text-light); }
+        li::before { content: "✓"; color: var(--accent); position: absolute; left: 0; font-weight: bold; }
+
+        /* --- NUEVO ACORDEÓN INTERACTIVO PARA LOS 7 PASOS --- */
+        .steps-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 25px 0;
+        }
+        
+        .step-node {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .step-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .step-header:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        .step-badge {
+            background-color: var(--accent);
+            color: var(--primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            flex-grow: 1;
+        }
+
+        .step-icon {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background-color: rgba(10, 25, 47, 0.4);
+            padding: 0 15px;
+        }
+
+        /* Clases activas controladas por JavaScript */
+        .step-node.active .step-content {
+            max-height: 120px; /* Espacio suficiente para la explicación corta */
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .step-node.active .step-icon {
+            transform: rotate(180deg);
             color: var(--accent);
         }
 
-        .metric-label {
-            font-size: 0.85rem;
+        .step-content p {
+            margin: 0;
+            font-size: 0.88rem;
             color: var(--text-muted);
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 30px;
-        }
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; text-align: center; }
+        .metric-card { background: rgba(var(--accent-rgb), 0.05); border: 1px solid rgba(var(--accent-rgb), 0.2); padding: 20px 10px; border-radius: 8px; }
+        .metric-value { font-size: 2.3rem; font-weight: 800; color: var(--accent); }
+        .metric-desc { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
 
-        .team-list {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 10px;
+        footer { background-color: #071120; text-align: center; padding: 40px 20px; font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); }
+        .team { margin: 15px 0; color: var(--text-light); font-weight: 500; line-height: 1.8; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.2rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <span class="badge">MVP Funcional</span>
+        <div class="badge">Modelos YOLOv8n y CLIP</div>
         <h1>FashionVision-AI</h1>
-        <div class="subtitle">Sistema Inteligente de Auto-cobro para Tiendas de Ropa</div>
-        <div class="tagline">Mediante Visión Artificial — Estilo kiosko, sin códigos de barras, sin fricciones.</div>
+        <div class="subtitle">Sistema Inteligente de Auto-cobro estilo Kiosko para Tiendas de Ropa</div>
     </header>
 
     <div class="container">
 
-        <section>
-            <h2>¿Qué es el Proyecto?</h2>
-            <p>Es una plataforma innovadora de auto-cobro orientada al sector retail de moda[cite: 167, 193]. Reemplaza por completo el escaneo tradicional mediante una solución 100% automatizada basada en inteligencia artificial[cite: 167, 178].</p>
-            <ul>
-                <li><strong>Detección Instantánea:</strong> Identifica prendas en segundos utilizando cámaras físicas de alta fidelidad[cite: 168, 184].</li>
-                <li><strong>Sin Etiquetas Tradicionales:</strong> Elimina de raíz la dependencia de códigos de barras o costosas etiquetas RFID[cite: 167, 178].</li>
-                <li><strong>Gestión Integral:</strong> Sincroniza el carrito de compras, inventarios y analíticas de forma centralizada y en tiempo real[cite: 168].</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>El Reto del Retail de Moda</h2>
-            <p>Los esquemas de cobro actuales generan cuellos de botella críticos debido a procesos manuales lentos, errores humanos en cajas, etiquetados inexactos y falta de visibilidad en inventarios[cite: 168].</p>
-            <p><strong>Beneficios clave de nuestra propuesta:</strong></p>
-            <ul>
-                <li>Optimización radical en los tiempos de atención[cite: 171].</li>
-                <li>Reducción absoluta de errores de captura y cobro erróneo[cite: 173].</li>
-                <li>Automatización fluida de inventarios con actualizaciones en tiempo real[cite: 172, 174].</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Inteligencia Artificial Detrás del Sistema</h2>
-            <p>La robustez de la plataforma recae en la combinación sinérgica de dos modelos avanzados de aprendizaje profundo[cite: 175]:</p>
-            <ul>
-                <li><strong>YOLO (yolov8n):</strong> Se encarga de la localización espacial del producto; responde con precisión matemática a la pregunta: <em>¿Dónde está la prenda?</em> [cite: 175, 176]</li>
-                <li><strong>CLIP (laion CLIP):</strong> Ejecuta el análisis semántico y comparativa visual contra el inventario; responde a la pregunta: <em>¿Qué producto es?</em> [cite: 175, 177]</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Funcionamiento en Tienda (7 Pasos)</h2>
-            <div class="steps-container">
-                <div class="step-card active-step">
-                    <span class="step-num">1.</span> El cliente presenta la prenda ante la cámara del kiosko[cite: 184].
-                </div>
-                <div class="step-card">
-                    <span class="step-num">2.</span> El hardware captura el frame automáticamente[cite: 185].
-                </div>
-                <div class="step-card active-step">
-                    <span class="step-num">3.</span> YOLO identifica la ubicación de la pieza[cite: 184].
-                </div>
-                <div class="step-card">
-                    <span class="step-num">4.</span> CLIP procesa las características y las contrasta con el catálogo[cite: 185].
-                </div>
-                <div class="step-card active-step">
-                    <span class="step-num">5.</span> El sistema despliega variantes interactivas disponibles (talla, color)[cite: 184].
-                </div>
-                <div class="step-card">
-                    <span class="step-num">6.</span> El artículo se añade dinámicamente al carrito digital[cite: 185].
-                </div>
-                <div class="step-card active-step">
-                    <span class="step-num">7.</span> Se despacha la orden hacia el punto de pago final[cite: 184].
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2>Resultados y Validación del MVP</h2>
-            <p>Tras rigurosas fases de experimentación en entornos controlados, evaluando múltiples productos, el sistema arrojó métricas sobresalientes de viabilidad[cite: 185, 186]:</p>
+        <section class="reveal">
+            <h2>¿Qué es FashionVision-AI?</h2>
+            <p>Es una solución de automatización comercial que utiliza Visión Artificial para identificar prendas de vestir instantáneamente a través de una cámara. Su objetivo es transformar las tiendas de ropa físicas introduciendo un formato de auto-cobro fluido.</p>
             
-            <div class="metrics">
-                <div>
-                    <div class="metric-item-huge">85.6%</div>
-                    <div class="metric-label">Exactitud Global</div>
+            <div class="visual-display">
+                <div class="scan-line"></div>
+                <i class="fa-solid fa-expand" style="font-size: 3rem; color: var(--accent);"></i>
+                <h4 style="margin-top:10px;">Reconocimiento Visual Activo</h4>
+                <p style="font-size:0.85rem; margin:0; color:var(--text-muted);">Procesando atributos de prendas sin códigos de barras</p>
+            </div>
+
+            <p>Al situar la prenda frente al kiosko, el sistema detecta de forma autónoma el tipo de producto, su precio, talla y disponibilidad, cargándolo al carrito digital sin necesidad de etiquetas tradicionales.</p>
+        </section>
+
+        <section class="reveal">
+            <h2>El Reto del Retail de Moda</h2>
+            <p>El ecosistema de tiendas tradicionales se enfrenta a fricciones operativas críticas que reducen sus ventas y productividad:</p>
+            <ul>
+                <li><strong>Cuellos de botella:</strong> Filas lentas en cajas debido al escaneo manual pieza por pieza.</li>
+                <li><strong>Errores Humanos:</strong> Pérdidas económicas por digitación incorrecta de productos o de precios.</li>
+                <li><strong>Desabasto ciego:</strong> Inventarios desactualizados por falta de reportes sincronizados en tiempo real.</li>
+            </ul>
+        </section>
+
+        <section class="reveal">
+            <h2>Inteligencia Artificial Detrás del Sistema</h2>
+            <p>El núcleo del proyecto combina dos redes neuronales avanzadas para lograr un análisis 100% visual:</p>
+            
+            <div class="ai-pipeline">
+                <div class="pipeline-box">
+                    <i class="fa-solid fa-vector-square" style="color:var(--accent);"></i>
+                    <strong>YOLOv8n</strong>
+                    <span style="display:block; font-size:0.75rem; color:var(--text-muted);">Localiza la prenda</span>
                 </div>
-                <div>
-                    <div class="metric-item-huge">137</div>
-                    <div class="metric-label">Detecciones Correctas</div>
-                </div>
-                <div>
-                    <div class="metric-item-huge">160</div>
-                    <div class="metric-label">Pruebas Totales</div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text-muted);"></i>
+                <div class="pipeline-box">
+                    <i class="fa-solid fa-brain"></i>
+                    <strong>LAION CLIP</strong>
+                    <span style="display:block; font-size:0.75rem; color:var(--text-muted);">Clasifica el modelo</span>
                 </div>
             </div>
-            <p style="margin-top: 15px; font-size: 0.9rem; text-align: center; color: var(--text-muted);">
-                * Rendimiento por categorías: Accesorios (100% exactitud), Calzado (~87%), Ropa (~77.5%).
-            </p>
+
+            <p>Mientras YOLO ubica espacialmente la ropa en el cuadro de video en milisegundos, CLIP compara la firma visual del artículo contra el catálogo digital de la tienda para asignarle su SKU correcto.</p>
+        </section>
+
+        <section class="reveal">
+            <h2>Funcionamiento del Kiosko</h2>
+            <p style="font-size: 0.9rem; font-style: italic; color: var(--accent);">👉 Haz clic en cualquier paso para ver el detalle técnico.</p>
+            
+            <div class="steps-timeline">
+                
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">1</div>
+                        <div class="step-title">Presentación del producto</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>El usuario coloca la prenda de ropa de forma natural frente al módulo óptico del kiosko de auto-cobro, eliminando la necesidad de buscar o alinear etiquetas físicas.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">2</div>
+                        <div class="step-title">Captura automática del frame</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>El hardware de video integrado detecta la presencia del objeto y extrae un cuadro (frame) de alta fidelidad en tiempo real para ser enviado inmediatamente al pipeline de procesamiento.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">3</div>
+                        <div class="step-title">Localización con YOLOv8n</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>La red neuronal ultraligera YOLO analiza la imagen y genera una caja delimitadora (bounding box) alrededor de la prenda, aislando el fondo y los elementos irrelevantes.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">4</div>
+                        <div class="step-title">Identificación semántica vía CLIP</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>El modelo LAION CLIP convierte la región aislada de la prenda en un vector matemático y lo contrasta con los embeddings del catálogo para determinar con exactitud qué artículo es.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">5</div>
+                        <div class="step-title">Despliegue de variantes en pantalla</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>La interfaz del kiosko muestra de forma interactiva la información recuperada del producto, permitiendo al cliente confirmar o ajustar especificaciones como la talla o color.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">6</div>
+                        <div class="step-title">Sincronización del carrito e inventario</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>Al confirmar, el artículo se añade de forma dinámica a la cuenta del usuario y se descuenta instantáneamente de la base de datos centralizada de existencias de la tienda.</p>
+                    </div>
+                </div>
+
+                <div class="step-node">
+                    <div class="step-header">
+                        <div class="step-badge">7</div>
+                        <div class="step-title">Despacho hacia la pasarela de pago</div>
+                        <i class="fa-solid fa-chevron-down step-icon"></i>
+                    </div>
+                    <div class="step-content">
+                        <p>El sistema genera la orden de cobro consolidada y habilita las opciones transaccionales (tarjeta o billetera digital) para que el cliente finalice su compra rápidamente.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2>Resultados y Validación del MVP</h2>
+            <p>Se evaluaron 8 productos mediante un total de 160 pruebas operativas en condiciones reales:</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card"><div class="metric-value">85.6%</div><div class="metric-desc">Exactitud Global</div></div>
+                <div class="metric-card"><div class="metric-value">137</div><div class="metric-desc">Aciertos</div></div>
+                <div class="metric-card"><div class="metric-value">160</div><div class="metric-desc">Pruebas</div></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="bar-group">
+                    <div class="bar-label"><span>Accesorios</span> <strong>100%</strong></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%;"></div></div>
+                </div>
+                <div class="bar-group">
+                    <div class="bar-label"><span>Calzado</span> <strong>87.5%</strong></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 87.5%;"></div></div>
+                </div>
+                <div class="bar-group">
+                    <div class="bar-label"><span>Ropa</span> <strong>77.5%</strong></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 77.5%;"></div></div>
+                </div>
+            </div>
         </section>
 
     </div>
 
     <footer>
-        <p><strong>Desarrollado por:</strong></p>
-        <div class="team-list">
+        <p><strong>Equipo de Desarrollo - FashionVision-AI</strong></p>
+        <div class="team">
             Flores Canizales Luis Orlando · Lizarraga Villaseñor Ramón Eduardo<br>
-            Ramos Castañeda Alejandrina · Soberanes Franco Francisco Miguel [cite: 195]
+            Ramos Castañeda Alejandrina · Soberanes Franco Francisco Miguel
         </div>
-        <p style="margin-top: 15px; font-size: 0.75rem;">Universidad Autónoma de Sinaloa · Dr. Hector Joaquin Escobar Cuevas · 2025 [cite: 195]</p>
+        <p style="font-size: 0.8rem; opacity: 0.5;">Universidad Autónoma de Sinaloa · Dr. Hector Joaquin Escobar Cuevas · 2026</p>
     </footer>
 
+    <script>
+        // Lógica de Scroll Reveal
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            const windowHeight = window.innerHeight;
+            const revealPoint = 60;
+
+            reveals.forEach(element => {
+                const revealTop = element.getBoundingClientRect().top;
+                if (revealTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('DOMContentLoaded', revealElements);
+        window.addEventListener('scroll', revealElements);
+
+        // NUEVA LÓGICA: Acordeón interactivo para los 7 pasos
+        const stepHeaders = document.querySelectorAll('.step-header');
+        
+        stepHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const currentNode = header.parentElement;
+                
+                // Cierra los demás pasos abiertos para mantener el orden (opcional)
+                document.querySelectorAll('.step-node').forEach(node => {
+                    if (node !== currentNode) {
+                        node.classList.remove('active');
+                    }
+                });
+
+                // Alterna el estado del paso actual
+                currentNode.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>
